@@ -210,3 +210,23 @@ function toggleLike() {
   document.getElementById("likeCounter").textContent = likeCounter;
   isLiked = !isLiked;
 }
+
+//Kommentar senden
+function sendCommend() {
+  const commentInput = document.getElementById("commentInput");
+  const comment = commentInput.value;
+
+  //Überprüft ob das Input leer ist
+  if (comment == "") {
+    alert("Bitte Kommentar einfügen");
+    return false;
+  }
+
+  //Speichert den Kommentar als Objekt
+  const commentObject = {
+    text: comment,
+  };
+  console.log("Kommentar:", commentObject);
+  //Inputinhalt zurückgesetzt
+  commentInput.value = "";
+}

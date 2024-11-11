@@ -49,3 +49,24 @@ header img {
   width: 1rem;
   height: auto;
 }
+
+.authPubGenreContainer {
+  width: 1rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.infoAboutContainer {
+  width: 1rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+table {
+  width: 20rem;
+}
+
+.commentsContainer img {
+  width: 2rem;
+  height: auto;
+}
