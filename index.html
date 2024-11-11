@@ -4,8 +4,47 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Book Store</title>
+    <link rel="icon" href="./images/owl-158411_640.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
   </head>
-  <body></body>
+  <body>
+    <div class="contentFrame">
+      <header>
+        <img src="./images/owl-158411_640.png" alt="DA Bookstore Icon" />
+        <h1>DA Bookstore - get your book here</h1>
+      </header>
+      <main>
+        <div class="booksContentFrame">
+          <h2 id="bookTitle"></h2>
+          <img
+            class="bookIcon"
+            src="./images/book-161117_640.png"
+            alt="Book Icon"
+          />
+          <div class="priceLikesContainer">
+            <div class="priceContainer">
+              <p>Price</p>
+            </div>
+            <div class="likeContainer">
+              <span class="likesCounter" id="likeCounter">1250</span>
+              <button
+                class="likesButton"
+                id="likeButton"
+                onclick="toggleLike()"
+              >
+                <img id="likeImg" src="./images/blackheart.png" alt="Like" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
 </html>

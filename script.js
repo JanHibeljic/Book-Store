@@ -192,3 +192,21 @@ let books = [
     ],
   },
 ];
+
+//likescounter
+let likeCounter = 1250;
+let isLiked = false;
+//Funktion wird aufgerufen wenn der Like Button geklickt wird.
+function toggleLike() {
+  let likeImg = document.getElementById("likeImg");
+
+  if (isLiked) {
+    likeCounter--;
+    likeImg.src = "./images/blackheart.png";
+  } else {
+    likeCounter++;
+    likeImg.src = "./images/redheart.png";
+  }
+  document.getElementById("likeCounter").textContent = likeCounter;
+  isLiked = !isLiked;
+}
