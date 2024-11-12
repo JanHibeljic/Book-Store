@@ -193,6 +193,36 @@ let books = [
   },
 ];
 
+// Aufruf der Funktionen
+function init() {
+  renderBook(); // Diese Funktion fügt alle Bücher hinzu
+}
+
+function renderBook() {
+  let content = document.getElementById("bookContentFrame");
+  // Initialisiere den HTML Content um alle Bücher zu rendern
+  let bookHTML = "";
+  // Iteriere über alle Bücher und füge HTML für jedes Buch hinzu
+  for (let indexBook = 0; indexBook < books.length; indexBook++) {
+    bookHTML += `
+      <div class="book">
+        <h2 id="bookTitle">${books[indexBook].name}</h2>
+        <img class="bookIcon" src="./images/book-161117_640.png" alt="Book Icon">
+        <div>
+          <p>Preis: ${books[indexBook].price} €</p>
+          <div class="likeContainer"></div>
+        </div>
+        <p>Autor: ${books[indexBook].author}</p>
+        <p>Erscheinungsjahr: ${books[indexBook].publishedYear}</p>
+        <p>Genre: ${books[indexBook].genre}</p>
+      </div>
+    `;
+  }
+
+  // Setze den gesammelten HTML-Inhalt in den Container
+  content.innerHTML = bookHTML;
+}
+
 //likescounter
 let likeCounter = 1250;
 let isLiked = false;
