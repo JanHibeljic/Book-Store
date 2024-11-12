@@ -210,7 +210,13 @@ function renderBook() {
         <img class="bookIcon" src="./images/book-161117_640.png" alt="Book Icon">
         <div>
           <p>Preis: ${books[indexBook].price} €</p>
-          <div class="likeContainer"></div>
+          <div id="likeContainer"><span class="likesCounter" id="likeCounter">1250</span><img
+      class="zoom"
+      id="likeImg"
+      src="./images/blackheart.png"
+      alt="Like"
+      onclick="toggleLike()"
+    /></div>
         </div>
         <p>Autor: ${books[indexBook].author}</p>
         <p>Erscheinungsjahr: ${books[indexBook].publishedYear}</p>
