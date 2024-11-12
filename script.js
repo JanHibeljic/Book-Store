@@ -197,55 +197,86 @@ let books = [
 function init() {
   renderBook(); // Diese Funktion fügt alle Bücher hinzu
 }
+// Diese Funktion erstellt das HTML für ein einzelnes Buch basierend auf den übergebenen Buchdaten
+function getBookHTML(book, index) {
+  // Der ternäre Operator entscheidet basierend auf dem liked-Status des Buchs, welches Icon angezeigt werden soll
+  let likeIcon = book.liked
+    ? "./images/blackheart.png" // Wenn liked true ist, wird das schwarze Herz angezeigt
+    : "./images/redheart.png"; // Wenn liked false ist, wird das rote Herz angezeigt
 
+  // Initialisiere den HTML-String für das Like-Element
+  let likeHTML = "";
+  // Wenn das Buch geliked ist, wird das Like-Element zum HTML hinzugefügt
+  if (book.liked) {
+    likeHTML = `
+      <div id="likeContainer-${index}">
+        <span class="likesCounter" id="likeCounter-${index}">${book.likes}</span>
+        <img
+          class="zoom"
+          id="likeImg-${index}"
+          src="${likeIcon}"
+          alt="Like"
+          onclick="toggleLike(${index})"  // Klick-Event zum Ändern des Like-Status
+        />
+      </div>
+    `;
+  }
+
+  // Erstelle das HTML für das gesamte Buch und füge alle relevanten Daten hinzu
+  return `
+    <div class="book">
+      <h2 id="bookTitle">${book.name}</h2>
+      <img class="bookIcon" src="./images/book-161117_640.png" alt="Book Icon">
+      <div>
+        <p>Preis: ${book.price} €</p>
+        ${likeHTML}  
+      </div>
+      <p>Autor: ${book.author}</p>
+      <p>Erscheinungsjahr: ${book.publishedYear}</p>
+      <p>Genre: ${book.genre}</p>
+    </div>
+  `;
+}
+
+// Diese Funktion rendert alle Bücher und fügt sie dem HTML-Container hinzu
 function renderBook() {
   let content = document.getElementById("bookContentFrame");
-  // Initialisiere den HTML Content um alle Bücher zu rendern
+  // Initialisiere den HTML-Content, um alle Bücher zu rendern
   let bookHTML = "";
   // Iteriere über alle Bücher und füge HTML für jedes Buch hinzu
   for (let indexBook = 0; indexBook < books.length; indexBook++) {
-    bookHTML += `
-      <div class="book">
-        <h2 id="bookTitle">${books[indexBook].name}</h2>
-        <img class="bookIcon" src="./images/book-161117_640.png" alt="Book Icon">
-        <div>
-          <p>Preis: ${books[indexBook].price} €</p>
-          <div id="likeContainer"><span class="likesCounter" id="likeCounter">1250</span><img
-      class="zoom"
-      id="likeImg"
-      src="./images/blackheart.png"
-      alt="Like"
-      onclick="toggleLike()"
-    /></div>
-        </div>
-        <p>Autor: ${books[indexBook].author}</p>
-        <p>Erscheinungsjahr: ${books[indexBook].publishedYear}</p>
-        <p>Genre: ${books[indexBook].genre}</p>
-      </div>
-    `;
+    bookHTML += getBookHTML(books[indexBook], indexBook);
   }
 
   // Setze den gesammelten HTML-Inhalt in den Container
   content.innerHTML = bookHTML;
 }
 
-//likescounter
-let likeCounter = 1250;
-let isLiked = false;
-//Funktion wird aufgerufen wenn der Like Button geklickt wird.
-function toggleLike() {
-  let likeImg = document.getElementById("likeImg");
+// Diese Funktion wird aufgerufen, wenn der Benutzer auf das Like-Icon klickt
+function toggleLike(index) {
+  let book = books[index]; // Hole das entsprechende Buch basierend auf dem Index
+  let likeImg = document.getElementById(`likeImg-${index}`); // Referenziere das Like-Icon
+  let likeCounterElement = document.getElementById(`likeCounter-${index}`); // Referenziere den Like-Counter
 
-  if (isLiked) {
-    likeCounter--;
-    likeImg.src = "./images/blackheart.png";
+  // Überprüfe den aktuellen liked-Status des Buchs und ändere den Status entsprechend
+  if (book.liked) {
+    book.likes++; // Erhöhe den Like-Counter
+    book.liked = false; // Setze den liked-Status auf false
+    likeImg.src = "./images/redheart.png"; // Ändere das Icon auf das rote Herz
   } else {
-    likeCounter++;
-    likeImg.src = "./images/redheart.png";
+    book.likes--; // Verringere den Like-Counter
+    book.liked = true; // Setze den liked-Status auf true
+    likeImg.src = "./images/blackheart.png"; // Ändere das Icon auf das schwarze Herz
   }
-  document.getElementById("likeCounter").textContent = likeCounter;
-  isLiked = !isLiked;
+  // Aktualisiere den Like-Counter im HTML-Element
+  likeCounterElement.textContent = book.likes;
 }
+
+// Erklärung des ternären Operators
+// Der ternäre Operator ist eine Kurzform von if...else. Er wird verwendet, um einen Wert basierend auf einer Bedingung auszuwählen.
+// Die allgemeine Syntax lautet: Bedingung ? WertWennTrue : WertWennFalse;
+// In diesem Code wird der ternäre Operator verwendet, um das entsprechende Like-Icon basierend auf dem liked-Status des Buchs auszuwählen.
+// Wenn book.liked true ist, wird das schwarze Herz ausgewählt. Wenn book.liked false ist, wird das rote Herz ausgewählt.
 
 //Kommentar senden
 function sendCommend() {
