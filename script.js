@@ -206,7 +206,7 @@ function getBookHTML(book, index) {
     : "./images/blackheart.png"; // Wenn liked false ist, wird das schwarze Herz angezeigt
 
   // Initialisiere den HTML-String für das Like-Element, damit es unabhängig vom Liked-Status immer angezeigt wird
-  let likeHTML = `
+  let likeHTML = /*HTML*/ `
     <div id="likeContainer-${index}">
       <span class="likesCounter" id="likeCounter-${index}">${book.likes}</span>
       <img
@@ -214,13 +214,31 @@ function getBookHTML(book, index) {
         id="likeImg-${index}"
         src="${likeIcon}"
         alt="Like"
-        onclick="toggleLike(${index})"  // Klick-Event zum Ändern des Like-Status
+        onclick="toggleLike(${index})"  /* Klick-Event zum Ändern des Like-Status */
       />
     </div>
   `;
 
+  // Erstelle das HTML für die Kommentare des Buches
+  let commentsHTML = "";
+  if (book.comments.length > 0) {
+    commentsHTML = '<div class="comments"><h3>Kommentare:</h3>';
+    for (let i = 0; i < book.comments.length; i++) {
+      commentsHTML += `<p><strong>${book.comments[i].name}:</strong> ${book.comments[i].comment}</p>`;
+    }
+    commentsHTML += "</div>";
+  }
+
+  // Eingabefeld und Senden-Button für neue Kommentare
+  commentsHTML += /*HTML*/ `
+    <div class="add-comment">
+      <input type="text" id="commentInput-${index}" placeholder="Schreibe dein Kommentar">
+      <button onclick="sendComment(${index})">senden</button>
+    </div>
+  `;
+
   // Erstelle das HTML für das gesamte Buch und füge alle relevanten Daten hinzu
-  return `
+  return /*HTML*/ `
     <div class="book">
       <h2 id="bookTitle">${book.name}</h2>
       <img class="bookIcon" src="./images/book-161117_640.png" alt="Book Icon">
@@ -231,6 +249,7 @@ function getBookHTML(book, index) {
       <p>Autor: ${book.author}</p>
       <p>Erscheinungsjahr: ${book.publishedYear}</p>
       <p>Genre: ${book.genre}</p>
+      ${commentsHTML}
     </div>
   `;
 }
@@ -270,28 +289,71 @@ function toggleLike(index) {
   likeCounterElement.textContent = book.likes;
 }
 
-// Erklärung des ternären Operators
-// Der ternäre Operator ist eine Kurzform von if...else. Er wird verwendet, um einen Wert basierend auf einer Bedingung auszuwählen.
-// Die allgemeine Syntax lautet: Bedingung ? WertWennTrue : WertWennFalse;
-// In diesem Code wird der ternäre Operator verwendet, um das entsprechende Like-Icon basierend auf dem liked-Status des Buchs auszuwählen.
-// Wenn book.liked true ist, wird das schwarze Herz ausgewählt. Wenn book.liked false ist, wird das rote Herz ausgewählt.
+// Diese Funktion wird aufgerufen, wenn der Benutzer einen Kommentar absendet
+function sendComment(index) {
+  const commentInput = document.getElementById(`commentInput-${index}`); // Hole das Eingabefeld basierend auf dem Index des Buches
+  const comment = commentInput.value; // Hole den Wert des Eingabefeldes
 
-//Kommentar senden
-function sendCommend() {
-  const commentInput = document.getElementById("commentInput");
-  const comment = commentInput.value;
-
-  //Überprüft ob das Input leer ist
+  // Überprüft ob das Input leer ist
   if (comment == "") {
-    alert("Bitte Kommentar einfügen");
-    return false;
+    alert("Bitte Kommentar einfügen"); // Zeige eine Warnung an, wenn das Eingabefeld leer ist
+    return false; // Beende die Funktion, wenn das Eingabefeld leer ist
   }
 
-  //Speichert den Kommentar als Objekt
+  // Speichert den Kommentar als Objekt
   const commentObject = {
-    text: comment,
+    name: "userJan", // Name des Benutzers, der den Kommentar schreibt
+    comment: comment, // Der eingegebene Kommentar
   };
-  console.log("Kommentar:", commentObject);
-  //Inputinhalt zurückgesetzt
-  commentInput.value = "";
+
+  // Fügt den neuen Kommentar zum entsprechenden Buch hinzu
+  books[index].comments.push(commentObject); // Füge den Kommentar zum comments-Array des entsprechenden Buches hinzu
+
+  // Rendert die Bücher neu, um den neuen Kommentar anzuzeigen
+  renderBook(); // Rufe die renderBook-Funktion auf, um die Ansicht zu aktualisieren
+
+  // Inputinhalt zurückgesetzt
+  commentInput.value = ""; // Setze den Inhalt des Eingabefeldes zurück
 }
+
+/**
+ * Programmablaufs und Funktionen:
+ *
+ * 1. `getBookHTML(book, index)`:
+ *    - Diese Funktion erstellt das HTML für ein einzelnes Buch.
+ *    - Basierend auf dem `liked`-Status des Buches wird das entsprechende Like-Icon (rotes oder schwarzes Herz) gewählt.
+ *    - Es werden die Informationen des Buches wie Titel, Autor, Preis, Erscheinungsjahr und Genre in HTML-Elemente eingefügt.
+ *    - Kommentare des Buches werden ebenfalls eingefügt, falls vorhanden.
+ *    - Zusätzlich wird ein Eingabefeld und ein Button hinzugefügt, um neue Kommentare zu schreiben.
+ *
+ * 2. `renderBook()`:
+ *    - Diese Funktion rendert alle Bücher auf der Webseite.
+ *    - Es wird durch die gesamte `books`-Liste iteriert und für jedes Buch wird das HTML mithilfe der `getBookHTML()`-Funktion generiert.
+ *    - Der gesamte HTML-Content wird dann in das Element mit der ID `bookContentFrame` eingefügt, um die Bücher anzuzeigen.
+ *
+ * 3. `toggleLike(index)`:
+ *    - Diese Funktion wird aufgerufen, wenn der Benutzer auf das Like-Icon klickt.
+ *    - Der `liked`-Status des Buches wird umgeschaltet (also von `true` zu `false` oder umgekehrt).
+ *    - Abhängig vom neuen Status wird der Like-Counter erhöht oder verringert und das entsprechende Like-Icon (rotes oder schwarzes Herz) gesetzt.
+ *    - Der aktualisierte Like-Counter wird im HTML-Element angezeigt.
+ *
+ * 4. `sendComment(index)`:
+ *    - Diese Funktion wird aufgerufen, wenn der Benutzer einen Kommentar absendet.
+ *    - Es wird überprüft, ob das Eingabefeld leer ist. Falls ja, wird eine Warnung angezeigt und die Funktion beendet.
+ *    - Wenn das Eingabefeld nicht leer ist, wird ein neues Kommentarobjekt erstellt und dem `comments`-Array des entsprechenden Buches hinzugefügt.
+ *    - Danach wird die Funktion `renderBook()` aufgerufen, um die aktualisierte Liste der Bücher inklusive des neuen Kommentars anzuzeigen.
+ *    - Das Eingabefeld wird anschließend geleert.
+ *
+ * Allgemeiner Programmablauf:
+ * - Das Programm besteht aus einer Liste von Büchern (`books`), wobei jedes Buch mehrere Eigenschaften wie Titel, Autor, Kommentare usw. hat.
+ * - Beim Laden der Seite wird die Funktion `init()` aufgerufen, welche die Funktion `renderBook()` verwendet, um die Bücher anzuzeigen.
+ * - Benutzer kann Bücher liken oder Kommentare hinzufügen, was jeweils die entsprechenden Funktionen (`toggleLike()` und `sendComment()`) auslöst.
+ * - Die Funktionen aktualisieren die Buchdaten und rendern die aktualisierte HTML-Ansicht, sodass der Benutzer die Änderungen sofort sieht.
+ 
+
+ * Erklärung des ternären Operators
+ * Der ternäre Operator ist eine Kurzform von if...else. Er wird verwendet, um einen Wert basierend auf einer Bedingung auszuwählen.
+ * Die allgemeine Syntax lautet: Bedingung ? WertWennTrue : WertWennFalse;
+ * In diesem Code wird der ternäre Operator verwendet, um das entsprechende Like-Icon basierend auf dem liked-Status des Buchs auszuwählen.
+ * Wenn book.liked true ist, wird das schwarze Herz ausgewählt. Wenn book.liked false ist, wird das rote Herz ausgewählt.
+**/
