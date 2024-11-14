@@ -197,30 +197,27 @@ let books = [
 function init() {
   renderBook(); // Diese Funktion fügt alle Bücher hinzu
 }
+
 // Diese Funktion erstellt das HTML für ein einzelnes Buch basierend auf den übergebenen Buchdaten
 function getBookHTML(book, index) {
   // Der ternäre Operator entscheidet basierend auf dem liked-Status des Buchs, welches Icon angezeigt werden soll
   let likeIcon = book.liked
-    ? "./images/blackheart.png" // Wenn liked true ist, wird das schwarze Herz angezeigt
-    : "./images/redheart.png"; // Wenn liked false ist, wird das rote Herz angezeigt
+    ? "./images/redheart.png" // Wenn liked true ist, wird das rote Herz angezeigt
+    : "./images/blackheart.png"; // Wenn liked false ist, wird das schwarze Herz angezeigt
 
-  // Initialisiere den HTML-String für das Like-Element
-  let likeHTML = "";
-  // Wenn das Buch geliked ist, wird das Like-Element zum HTML hinzugefügt
-  if (book.liked) {
-    likeHTML = `
-      <div id="likeContainer-${index}">
-        <span class="likesCounter" id="likeCounter-${index}">${book.likes}</span>
-        <img
-          class="zoom"
-          id="likeImg-${index}"
-          src="${likeIcon}"
-          alt="Like"
-          onclick="toggleLike(${index})"  // Klick-Event zum Ändern des Like-Status
-        />
-      </div>
-    `;
-  }
+  // Initialisiere den HTML-String für das Like-Element, damit es unabhängig vom Liked-Status immer angezeigt wird
+  let likeHTML = `
+    <div id="likeContainer-${index}">
+      <span class="likesCounter" id="likeCounter-${index}">${book.likes}</span>
+      <img
+        class="zoom"
+        id="likeImg-${index}"
+        src="${likeIcon}"
+        alt="Like"
+        onclick="toggleLike(${index})"  // Klick-Event zum Ändern des Like-Status
+      />
+    </div>
+  `;
 
   // Erstelle das HTML für das gesamte Buch und füge alle relevanten Daten hinzu
   return `
@@ -260,14 +257,15 @@ function toggleLike(index) {
 
   // Überprüfe den aktuellen liked-Status des Buchs und ändere den Status entsprechend
   if (book.liked) {
-    book.likes++; // Erhöhe den Like-Counter
-    book.liked = false; // Setze den liked-Status auf false
-    likeImg.src = "./images/redheart.png"; // Ändere das Icon auf das rote Herz
-  } else {
     book.likes--; // Verringere den Like-Counter
-    book.liked = true; // Setze den liked-Status auf true
+    book.liked = false; // Setze den liked-Status auf false
     likeImg.src = "./images/blackheart.png"; // Ändere das Icon auf das schwarze Herz
+  } else {
+    book.likes++; // Erhöhe den Like-Counter
+    book.liked = true; // Setze den liked-Status auf true
+    likeImg.src = "./images/redheart.png"; // Ändere das Icon auf das rote Herz
   }
+
   // Aktualisiere den Like-Counter im HTML-Element
   likeCounterElement.textContent = book.likes;
 }
